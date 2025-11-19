@@ -81,9 +81,9 @@ const Nav = () => {
             </Avatar>
             <div className='flex w-full font-medium flex-col items-start justify-center text-xs whitespace-nowrap'>
               <span className='font-normal'>
-                {user.firstName} {user.lastName}
-                <span className='text-emerald-500'>{user?.email}</span>
+                {user?.firstName} {user?.lastName}
               </span>
+              <span className='text-emerald-500'>{user?.email}</span>
             </div>
           </Suspense>
         </div>
