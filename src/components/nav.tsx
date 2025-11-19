@@ -16,8 +16,7 @@ import Image from "next/image";
 import { IoNotificationsSharp } from "react-icons/io5";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { Skeleton } from "./ui/skeleton";
-import { FaCircleUser } from "react-icons/fa6";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { User } from "lucide-react";
 
 const Nav = () => {
   const { user } = useCurrentUser();
@@ -73,12 +72,13 @@ const Nav = () => {
               </>
             }
           >
-            <Avatar className='w-[3rem] h-[3rem]'>
-              <AvatarImage src={user.profilePicture} alt='your profile image' />
-              <AvatarFallback>
-                <FaCircleUser className='w-full h-full text-gray-300' />
-              </AvatarFallback>
-            </Avatar>
+            <div className='p-2 rounded-full overflow-clip relative bg-emerald-500 flex items-center justify-center'>
+              {user?.profilePicture ? (
+                <Image src={user.profilePicture} alt='user avatar' fill />
+              ) : (
+                <User className='text-white w-4 h-4' />
+              )}
+            </div>
             <div className='flex w-full font-medium flex-col items-start justify-center text-xs whitespace-nowrap'>
               <span className='font-normal'>
                 {user?.firstName} {user?.lastName}
