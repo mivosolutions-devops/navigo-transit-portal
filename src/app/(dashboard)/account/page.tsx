@@ -19,8 +19,7 @@ import ActionModal from "@/components/ui/globals/action-modal";
 import Image from "next/image";
 
 const Account = () => {
-  const { user, uploadProgress, uploadStatus, loading, updateUserProfile } =
-    useCurrentUser();
+  const { user, loading, updateUserProfile } = useCurrentUser();
   const form = useForm<z.infer<typeof AccountFormSchema>>({
     resolver: zodResolver(AccountFormSchema),
     defaultValues: {
@@ -41,6 +40,8 @@ const Account = () => {
   const watchProfilePicture = watch("profilePicture");
   const picInputRef = useRef<HTMLInputElement | null>(null);
   const updateButtonRef = useRef<HTMLButtonElement | null>(null);
+  const uploadProgress = useRef<number>(0);
+  const uploadStatus = useRef<number>(0);
 
   useEffect(() => {
     if (watchProfilePicture) {
@@ -194,7 +195,7 @@ const Account = () => {
                     />
                     <div className='flex flex-col items-center justify-center'>
                       <span className='font-semibold text-xl'>
-                        {uploadStatus}
+                        {uploadStatus.current}%
                       </span>
                       <span className='text-gray-500 font-medium'>
                         Please wait for the new profile image to upload
@@ -204,7 +205,7 @@ const Account = () => {
                       <div className='w-full flex flex-col items-center'>
                         <div className='w-full h-10 flex flex-col items-center justify-center relative px-8'>
                           <div
-                            className={`w-fit h-fit -top-4 absolute left-[${Math.round(uploadProgress * 0.9)}%]`}
+                            className={`w-fit h-fit -top-4 absolute left-[${Math.round(uploadProgress.current * 0.9)}%]`}
                           >
                             <Image
                               src={"/progress-car.svg"}
@@ -215,11 +216,13 @@ const Account = () => {
                           </div>
                           <div className='w-full h-2 rounded-full bg-gray-200'>
                             <div
-                              className={`w-[${uploadProgress}%] h-full rounded-full bg-emerald-600`}
+                              className={`w-[${uploadProgress.current}%] h-full rounded-full bg-emerald-600`}
                             ></div>
                           </div>
                         </div>
-                        <span className='text-sm'>{uploadProgress}%</span>
+                        <span className='text-sm'>
+                          {uploadProgress.current}%
+                        </span>
                       </div>
                       <Button
                         type='submit'
