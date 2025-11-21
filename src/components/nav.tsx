@@ -16,10 +16,12 @@ import Image from "next/image";
 import { IoNotificationsSharp } from "react-icons/io5";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { Skeleton } from "./ui/skeleton";
-import { User } from "lucide-react";
+import { LogOut, User } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 const Nav = () => {
   const { user } = useCurrentUser();
+  const { logout } = useAuth();
 
   return (
     <nav className='w-full flex items-center justify-between p-[1.12rem] border-b border-gray-200 '>
@@ -60,33 +62,50 @@ const Nav = () => {
         <div className='flex gap-4 rounded-full p-3 bg-light-grayish relative before:absolute before:w-3 before:h-3 before:bg-emerald-500 before:right-1 before:top-0 before:rounded-full before:text-xs'>
           <IoNotificationsSharp className='text-gray-600 text-base' />
         </div>
-        <div className='w-full flex items-center justify-start gap-3'>
-          <Suspense
-            fallback={
-              <>
-                <Skeleton className='w-[4rem] h-[2.5rem] rounded-full overflow-clip relative' />
-                <div className='flex w-full font-medium flex-col items-start justify-center text-xs whitespace-nowrap'>
-                  <Skeleton className='w-8' />
-                  <Skeleton className='w-8' />
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <div className='w-full flex items-center justify-start gap-3 cursor-pointer'>
+              <Suspense
+                fallback={
+                  <>
+                    <Skeleton className='w-[4rem] h-[2.5rem] rounded-full overflow-clip relative' />
+                    <div className='flex w-full font-medium flex-col items-start justify-center text-xs whitespace-nowrap'>
+                      <Skeleton className='w-8' />
+                      <Skeleton className='w-8' />
+                    </div>
+                  </>
+                }
+              >
+                <div className='p-2 rounded-full overflow-clip relative bg-emerald-500 flex items-center justify-center w-9 h-8'>
+                  {user?.profilePicture ? (
+                    <Image
+                      src={user.profilePicture}
+                      alt='user avatar'
+                      fill
+                      className='w-full h-full object-cover'
+                    />
+                  ) : (
+                    <User className='text-white w-4 h-4' />
+                  )}
                 </div>
-              </>
-            }
-          >
-            <div className='p-2 rounded-full overflow-clip relative bg-emerald-500 flex items-center justify-center'>
-              {user?.profilePicture ? (
-                <Image src={user.profilePicture} alt='user avatar' fill />
-              ) : (
-                <User className='text-white w-4 h-4' />
-              )}
+                <div className='flex w-full font-medium flex-col items-start justify-center text-xs whitespace-nowrap'>
+                  <span className='font-normal'>
+                    {user?.firstName} {user?.lastName}
+                  </span>
+                  <span className='text-emerald-500'>{user?.email}</span>
+                </div>
+              </Suspense>
             </div>
-            <div className='flex w-full font-medium flex-col items-start justify-center text-xs whitespace-nowrap'>
-              <span className='font-normal'>
-                {user?.firstName} {user?.lastName}
-              </span>
-              <span className='text-emerald-500'>{user?.email}</span>
-            </div>
-          </Suspense>
-        </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align='end' className='w-56'>
+            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem className='cursor-pointer' onClick={logout}>
+              <LogOut className='mr-2 h-4 w-4' />
+              <span>Log out</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </nav>
   );
